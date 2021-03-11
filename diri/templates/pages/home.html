@@ -6,19 +6,22 @@
 {% include 'includes/hero.html' %}
 <main id="content">
   <div class="content-wrap py-0">
+    <div id="section-about" class="page-section">
 
-    <div class="container clearfix">
+      <div class="container clearfix">
 
-      <div class="mx-auto topmargin-lg bottommargin-lg" style="max-width: 850px;">
-        <div class="container">
-          <form class="row mb-0" action="{% url 'home' %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {% crispy form %}
-          </form>
+        <div class="mx-auto topmargin-lg bottommargin-lg" style="max-width: 850px;">
+          <div class="container">
+            <form class="row mb-0" action="{% url 'home' %}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              {% crispy form %}
+            </form>
+          </div>
         </div>
-      </div>
 
+      </div>
     </div>
+
   </div>
 </main>
 {% endblock content %}
