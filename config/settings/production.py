@@ -51,11 +51,11 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 CORS_REPLACE_HTTPS_REFERER = True
 HOST_SCHEME = "https://"
-CSRF_COOKIE_SAMESITE = 'Strict'
+CSRF_COOKIE_SAMESITE = "Strict"
 # https://docs.djangoproject.com/en/dev/topics/security/#ssl-https
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-seconds
 # TODO: set this to 60 seconds first and then to 518400 once you prove the former works
-SECURE_HSTS_SECONDS = 2592000 #60
+SECURE_HSTS_SECONDS = 2592000  # 60
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-hsts-include-subdomains
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
     "DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True
@@ -86,9 +86,7 @@ _AWS_EXPIRY = 60 * 60 * 24 * 7
 AWS_S3_OBJECT_PARAMETERS = {
     "CacheControl": f"max-age={_AWS_EXPIRY}, s-maxage={_AWS_EXPIRY}, must-revalidate"
 }
-AWS_HEADERS = {
-    'Access-Control-Allow-Origin': '*'
-}
+AWS_HEADERS = {"Access-Control-Allow-Origin": "*"}
 #  https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
 AWS_DEFAULT_ACL = None
 AWS_DOWNLOAD_EXPIRE = 5000
@@ -126,7 +124,8 @@ TEMPLATES[-1]["OPTIONS"]["loaders"] = [  # type: ignore[index] # noqa F405
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
-    "DJANGO_DEFAULT_FROM_EMAIL", default="DIRIBOOST INITIATIVE | BAYELSA STATE GOVT. <noreply@diriboostinitiative.com.ng>"
+    "DJANGO_DEFAULT_FROM_EMAIL",
+    default="DIRIBOOST INITIATIVE | BAYELSA STATE GOVT. <noreply@diriboostinitiative.com.ng>",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
@@ -148,11 +147,14 @@ INSTALLED_APPS += ["anymail"]  # noqa F405
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 # https://anymail.readthedocs.io/en/stable/installation/#anymail-settings-reference
 # https://anymail.readthedocs.io/en/stable/esps/postmark/
-EMAIL_BACKEND = "anymail.backends.postmark.EmailBackend"
-ANYMAIL = {
-    "POSTMARK_SERVER_TOKEN": env("POSTMARK_SERVER_TOKEN"),
-    "POSTMARK_API_URL": env("POSTMARK_API_URL", default="https://api.postmarkapp.com/"),
-}
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+ANYMAIL = {}
+EMAIL_HOST = env("EMAIL_HOST", default="wgh18.whogohost.com")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default='noreply@diriboostinitiative.com.ng')# sendgrid
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="textedpassword.")
+EMAIL_PORT = 465
+# EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
 
 # django-compressor
 # ------------------------------------------------------------------------------
@@ -223,7 +225,12 @@ sentry_logging = LoggingIntegration(
     level=SENTRY_LOG_LEVEL,  # Capture info and above as breadcrumbs
     event_level=logging.ERROR,  # Send errors as events
 )
-integrations = [sentry_logging, DjangoIntegration(), CeleryIntegration(), RedisIntegration()]
+integrations = [
+    sentry_logging,
+    DjangoIntegration(),
+    CeleryIntegration(),
+    RedisIntegration(),
+]
 sentry_sdk.init(
     dsn=SENTRY_DSN,
     integrations=integrations,
