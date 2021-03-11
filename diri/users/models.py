@@ -30,6 +30,8 @@ from model_utils.models import TimeStampedModel
 from model_utils.fields import StatusField
 from model_utils import Choices
 
+from diri.utils.storages import PrivateRootS3BOTO3Storage
+
 def get_filename_ext(filepath):
     base_name = os.path.basename(filepath)
     name, ext = os.path.splitext(base_name)
@@ -78,8 +80,8 @@ class Entrepreneurs(TimeStampedModel):
     bvn = CharField(_("Bank Verification Number (BVN)"), max_length=255, null=True, blank=False,)
     bank_name = CharField(_("Bank Name"), max_length=255, null=True, blank=False,)
     acc_no = CharField(_("Account Number (NUBAN)"), max_length=255, null=True, blank=False,)
-    st_o_acc = ImageField(_("Statement of Account"), upload_to=bank_file_path, null=True, blank=False, help_text="upload only clear image file")
-    acc_val = ImageField(_("Validate Statement"), upload_to=verify_file_path, null=True, blank=False, help_text="upload only clear image file")
+    st_o_acc = ImageField(_("Statement of Account"), upload_to=bank_file_path, storage=PrivateRootS3BOTO3Storage(), null=True, blank=False, help_text="upload only clear image file")
+    acc_val = ImageField(_("Validate Statement"), upload_to=verify_file_path, storage=PrivateRootS3BOTO3Storage(), null=True, blank=False, help_text="upload only clear image file")
     status = StatusField(default="pending")
 
     def __str__(self):

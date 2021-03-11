@@ -107,6 +107,9 @@ STATIC_URL = f"https://{aws_s3_domain}/static/"
 DEFAULT_FILE_STORAGE = "diri.utils.storages.MediaRootS3Boto3Storage"
 MEDIA_URL = f"https://{aws_s3_domain}/media/"
 
+PRIVATE_FILE_STORAGE = "diri.utils.storages.PrivateRootS3Boto3Storage"
+PRIVATE_URL = f"https://{aws_s3_domain}/private/"
+
 # TEMPLATES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#templates
