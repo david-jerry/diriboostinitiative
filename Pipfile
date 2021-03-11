@@ -47,6 +47,7 @@ collectfast = "==2.2.0"
 sentry-sdk = "==0.20.3"
 django-storages = {version = "==1.11.1", extras = ["boto3"]}
 django-anymail = {version = "==8.2", extras = ["postmark"]}
+django-formtools = "*"
 
 [dev-packages]
 

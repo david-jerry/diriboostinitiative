@@ -6,8 +6,12 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView, ListView
 from django.views.generic.edit import CreateView
 from diri.users.models import Entrepreneurs
-from diri.users.forms import EntrepreneursForm
+from diri.users.forms import ValidateForm, BioForm, StatementForm
+from formtools.wizard.views import SessionWizardView
 from django.contrib import messages
+from django.shortcuts import render
+from django.core.files.storage import DefaultStorage
+
 User = get_user_model()
 
 
@@ -47,16 +51,29 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 user_redirect_view = UserRedirectView.as_view()
 
-class ApplyNow(CreateView, LoginRequiredMixin, SuccessMessageMixin):
+
+class ApplyNow(SessionWizardView, LoginRequiredMixin, SuccessMessageMixin):
     model = Entrepreneurs
     template_name = "pages/home.html"
-    form_class = EntrepreneursForm
+    form_list = [BioForm, StatementForm, ValidateForm]
+    file_storage = DefaultStorage()
     success_url = reverse_lazy("home")
     success_message = _("Your application has been submitted successfully")
+    def get(self, request, *args, **kwargs):
+        try:
+            return self.render(self.get_form())
+        except KeyError:
+            return super().get(request, *args, **kwargs)
 
-    def form_valid(self, form):
+    def done(self, form_list, *args, **kwargs):
         request = self.request
-        return super().form_valid(form)
+        return render(
+            request,
+            "pages/home.html",
+            {
+                "form_data": [form.cleaned_data for form in form_list],
+            },
+        )
 
 
 apply_now = ApplyNow.as_view()

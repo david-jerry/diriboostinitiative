@@ -26,7 +26,7 @@ class UserCreationForm(admin_forms.UserCreationForm):
         }
 
 
-class EntrepreneursForm(forms.ModelForm):
+class BioForm(forms.ModelForm):
     class Meta:
         model = Entrepreneurs
         fields = [
@@ -38,8 +38,6 @@ class EntrepreneursForm(forms.ModelForm):
             "bvn",
             "bank_name",
             "acc_no",
-            "st_o_acc",
-            "acc_val",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -49,16 +47,14 @@ class EntrepreneursForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Row(
-                Column("first_name", css_class="form-group col-md-4 mb-4"),
-                Column("mid_name", css_class="form-group col-md-4 mb-4"),
-                Column("last_name", css_class="form-group col-md-4 mb-4"),
-                Column("state", css_class="form-group col-md-6 mb-4"),
-                Column("lga", css_class="form-group col-md-6 mb-4"),
+                Column("first_name", css_class="form-group col-md-12 mb-4"),
+                Column("mid_name", css_class="form-group col-md-12 mb-4"),
+                Column("last_name", css_class="form-group col-md-12 mb-4"),
+                Column("state", css_class="form-group col-md-12 mb-4"),
+                Column("lga", css_class="form-group col-md-12 mb-4"),
                 Column("bank_name", css_class="form-group col-md-12 mb-4"),
-                Column("bvn", css_class="form-group col-md-6 mb-4"),
-                Column("acc_no", css_class="form-group col-md-6 mb-4"),
-                Column("st_o_acc", css_class="form-group col-md-6 mb-4"),
-                Column("acc_val", css_class="form-group col-md-6 mb-4"),
+                Column("bvn", css_class="form-group col-md-12 mb-4"),
+                Column("acc_no", css_class="form-group col-md-12 mb-4"),
                 css_class="row form-section mb-4",
             ),
             Submit(
@@ -80,11 +76,61 @@ class EntrepreneursForm(forms.ModelForm):
             raise forms.ValidationError("You have already applied")
         return acc_no
 
+class StatementForm(forms.ModelForm):
+    class Meta:
+        model = Entrepreneurs
+        fields = [
+            "st_o_acc",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "sm-form-control border-form-control"
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column("st_o_acc", css_class="form-group col-md-12 mb-4"),
+                css_class="row form-section mb-4",
+            ),
+            Submit(
+                "submit",
+                "Submit ",
+                css_class="button button-border button-circle font-weight-medium ml-0 topmargin-sm",
+            ),
+        )
+
     def clean_st_o_acc(self):
         sto = self.cleaned_data['st_o_acc']
         if sto is None:
             raise forms.ValidationError("You have to upload a document here")
         return sto
+
+
+class ValidateForm(forms.ModelForm):
+    class Meta:
+        model = Entrepreneurs
+        fields = [
+            "acc_val",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "sm-form-control border-form-control"
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column("acc_val", css_class="form-group col-md-12 mb-4"),
+                css_class="row form-section mb-4",
+            ),
+            # Submit(
+            #     "submit",
+            #     "Submit ",
+            #     css_class="button button-border button-circle font-weight-medium ml-0 topmargin-sm",
+            # ),
+        )
+
 
     def clean_acc_val(self):
         acval = self.cleaned_data['acc_val']

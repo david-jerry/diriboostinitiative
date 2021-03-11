@@ -1,12 +1,26 @@
-{% load crispy_forms_tags %}
+{% load i18n crispy_forms_tags %}
 
-<div class="container clearfix">
 
-  <div class="mx-auto topmargin bottommargin-lg">
-    <form class="row mb-0" action="{% url 'users:apply' %}" method="post" enctype="multipart/form-data">
-      {%csrf_token%}
-      {% crispy form %}
-    </form>
-  </div>
 
-</div>
+<p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+<form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+<table>
+{{ wizard.management_form }}
+{% if wizard.form.forms in crispy_form %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+        {% crispy form %}
+    {% endfor %}
+{% else %}
+    {{ wizard.form }}
+{% endif %}
+</table>
+{% if wizard.steps.prev %}
+<button class="button button-border button-circle font-weight-medium ml-0 topmargin-sm" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
+<button class="button button-border button-circle font-weight-medium ml-0 topmargin-sm" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
+{% elif wizard.steps.next %}
+<input class="button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit" value="{% trans "next" %}"/>
+{% else %}
+<input class="button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit" value="{% trans "submit" %}"/>
+{%endif %}
+</form>

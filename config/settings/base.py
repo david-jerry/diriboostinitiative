@@ -92,6 +92,8 @@ THIRD_PARTY_APPS = [
     # PHONE NUMBER VERIFICATION
     "phonenumber_field",
     "sweetify",
+    # Form wizard or Form Step
+    'formtools',
 ]
 
 LOCAL_APPS = [
