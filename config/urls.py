@@ -6,6 +6,7 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from django.contrib.sitemaps.views import sitemap
 from config.sitemaps import StaticViewSitemap
+from diri.users.views import apply_now
 
 sitemaps = {
     "static": StaticViewSitemap,
@@ -18,7 +19,8 @@ def trigger_error(request):
 
 urlpatterns = [
     path("sentry-debug/", trigger_error),
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+    # path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+    path("", view=apply_now, name="home"),
     path(
         "terms/", TemplateView.as_view(template_name="pages/terms.html"), name="terms"
     ),

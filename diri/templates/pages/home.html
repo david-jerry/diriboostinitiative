@@ -1,1 +1,37 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+{% include 'includes/hero.html' %}
+<main id="content">
+  <div class="content-wrap py-0">
+    
+    <div class="container clearfix">
+
+      <div class="mx-auto topmargin-lg bottommargin-lg" style="max-width: 850px;">
+        <form class="row mb-0" action="{% url 'home' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% crispy form %}
+        </form>
+      </div>
+    
+    </div>
+  </div>
+</main>
+{% endblock content %}
+
+{% block inline_javascript %}
+<script>
+  jQuery(document).ready( function(){
+
+    jQuery('.price-block input:radio').on( 'change', function(){
+      $('.checked').removeClass('checked');
+      if($(this).is(':checked'))  {
+          $(this).parents('label').addClass('checked');
+      }
+    });
+
+  });
+</script>
+{% endblock inline_javascript %}

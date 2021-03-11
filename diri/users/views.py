@@ -1,10 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView, RedirectView, UpdateView
-
+from django.views.generic import DetailView, RedirectView, UpdateView, ListView
+from django.views.generic.edit import CreateView
+from diri.users.models import Entrepreneurs
+from diri.users.forms import EntrepreneursForm
+from django.contrib import messages
 User = get_user_model()
 
 
@@ -43,3 +46,17 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 
 user_redirect_view = UserRedirectView.as_view()
+
+class ApplyNow(CreateView, LoginRequiredMixin, SuccessMessageMixin):
+    model = Entrepreneurs
+    template_name = "pages/home.html"
+    form_class = EntrepreneursForm
+    success_url = reverse_lazy("home")
+    success_message = _("Your application has been submitted successfully")
+
+    def form_valid(self, form):
+        request = self.request
+        return super().form_valid(form)
+
+
+apply_now = ApplyNow.as_view()
