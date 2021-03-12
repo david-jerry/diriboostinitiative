@@ -55,24 +55,35 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 user_redirect_view = UserRedirectView.as_view()
 
 
-class ApplyNow(SessionWizardView, SuccessMessageMixin):
+class ApplyNow(SessionWizardView):
     model = Entrepreneurs
     template_name = "pages/home.html"
     form_list = [BioForm, StatementForm, ValidateForm]
-    file_storage = DefaultStorage()
+    file_storage = FileSystemStorage(location=os.path.join(settings.base.MEDIA_URL, 'tmp'))
 
 
-    # def get_form_initial(self, step):
-    #     if 'id' in self.kwargs:
-    #         return {}
-    #     initial = self.initial_dict.get(step, {})
-    #     return initial
+    def get_form_initial(self, step):
+        if 'id' in self.kwargs:
+            return {}
+        initial = self.initial_dict.get(step, {})
+        return initial
 
-    def get(self, request, *args, **kwargs):
-        try:
-            return self.render(self.get_form())
-        except KeyError:
-            return super().get(request, *args, **kwargs)
+    def get_form_instance(self, step):
+        pk = self.kwargs.get('pk')
+        if not self.instance_dict:
+            if 'pk' in self.kwargs:
+                entr_id = pk
+                self.instance_dict = Entrepreneurs.objects.get(pk=entr_id)
+            else:
+                self.instance_dict = Entrepreneurs()
+            # return self.instance_dict.get(step, None)
+        return self.instance_dict
+
+    # def get(self, request, *args, **kwargs):
+    #     try:
+    #         return self.render(self.get_form())
+    #     except KeyError:
+    #         return super().get(request, *args, **kwargs)
 
     def done(self, form_list, form_dict, *args, **kwargs):
         request = self.request

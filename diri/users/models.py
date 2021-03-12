@@ -71,7 +71,7 @@ class User(AbstractUser):
 
 class Entrepreneurs(TimeStampedModel):
     STATUS = Choices("pending", "approved", "rejected")
-    amount = DecimalField(_("Purchase Charge"), default=1000.00, max_digits=7, decimal_places=2, null=True, help_text="This is a one time payment, charged to you accout. \n You wont be able to re-edit your form, so make sure you used your correct information")
+    amount = DecimalField(_("Statement Validation Fee"), default=1000.00, max_digits=7, decimal_places=2, null=True, help_text="This is a one time payment, charged from your bank for you account validation. \n Compulsary for all applicants.")
     # entre = OneToOneField(User, on_delete=SET_NULL, null=True, blank=True)
     first_name = CharField(_("First Name"), max_length=255, null=True, blank=False)
     mid_name = CharField(_("Middle Name"), max_length=255, null=True, blank=False)
@@ -83,7 +83,7 @@ class Entrepreneurs(TimeStampedModel):
     bvn = CharField(_("Bank Verification Number (BVN)"), max_length=255, null=True, blank=False,)
     bank_name = CharField(_("Bank Name"), max_length=255, null=True, blank=False,)
     acc_no = CharField(_("Account Number (NUBAN)"), max_length=255, null=True, blank=False,)
-    st_o_acc = ImageField(_("Statement of Account"), upload_to=bank_file_path, storage=PrivateRootS3BOTO3Storage(), null=True, blank=False, help_text="upload only clear copy of your statement of account here")
+    st_o_acc = FileField(_("Statement of Account"), upload_to=bank_file_path, storage=PrivateRootS3BOTO3Storage(), null=True, blank=False, help_text="upload your account statement for verification")
     status = StatusField(default="pending")
 
     def __str__(self):

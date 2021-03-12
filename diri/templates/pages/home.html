@@ -63,14 +63,14 @@
 <script>
   $('input#pay').click(function payWithPaystackOrg(e) {
     e.preventDefault();
-    var email = $("#id_0-email").val();
-    var phone = $("#id_0-phone").val();
+    var email = $("#id_2-email").val();
+    var phone = $("#id_2-phone").val();
     var amount = $("#id_2-amount").val();
 
     var handler = PaystackPop.setup({
       key: 'pk_test_bbf939ac50083a6842f9a88433cf6ba690b9ca09',
       email: email,
-      amount: amount,
+      amount: "100000",
       currency: "NGN",
       ref: "DIRIBOOST_" + Math.floor((Math.random() * 1000000000) + 1),
       metadata: {
@@ -88,6 +88,7 @@
       },
       onClose: function () {
         alert('window closed');
+        submit()
       }
     });
     handler.openIframe();

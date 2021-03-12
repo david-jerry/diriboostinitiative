@@ -33,8 +33,6 @@ class BioForm(forms.ModelForm):
             "first_name",
             "mid_name",
             "last_name",
-            "email",
-            "phone",
             "state",
             "lga",
             "bank_name",
@@ -54,8 +52,6 @@ class BioForm(forms.ModelForm):
                 Column("last_name", css_class="col-md-12 mb-4"),
                 Column("state", css_class="col-md-6 mb-4"),
                 Column("lga", css_class="col-md-6 mb-4"),
-                Column("email", css_class="col-md-6 mb-4"),
-                Column("phone", css_class="col-md-6 mb-4"),
                 Column("bank_name", css_class="col-md-12 mb-4"),
                 Column("bvn", css_class="col-md-6 mb-4"),
                 Column("acc_no", css_class="col-md-6 mb-4"),
@@ -73,16 +69,6 @@ class BioForm(forms.ModelForm):
         if Entrepreneurs.objects.filter(bvn=bvn).exists():
             raise forms.ValidationError("You have already applied")
         return bvn
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if Entrepreneurs.objects.filter(email=email).exists():
-            raise forms.ValidationError("You have already applied")
-        return email
-    def clean_phone(self):
-        phone = self.cleaned_data['phone']
-        if Entrepreneurs.objects.filter(phone=phone).exists():
-            raise forms.ValidationError("You have already applied")
-        return phone
 
     def clean_acc_no(self):
         acc_no = self.cleaned_data['acc_no']
@@ -125,19 +111,23 @@ class ValidateForm(forms.ModelForm):
     class Meta:
         model = Entrepreneurs
         fields = [
+            "email",
+            "phone",
             "amount",
         ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['amount'].widget.attrs["readonly"] = True
+        self.fields['amount'].widget.attrs["disabled"] = True
         for field in self.fields.values():
             field.widget.attrs["class"] = "disabled sm-form-control border-form-control"
-            field.widget.attrs["readonly"] = True
-            field.widget.attrs["disabled"] = True
             
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Row(
+                Column("email", css_class="col-md-6 mb-4"),
+                Column("phone", css_class="col-md-6 mb-4"),
                 Column("amount", css_class="col-md-12 mb-4"),
                 css_class="row form-section mb-4",
             ),
@@ -148,9 +138,20 @@ class ValidateForm(forms.ModelForm):
             # ),
         )
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if Entrepreneurs.objects.filter(email=email).exists():
+            raise forms.ValidationError("You have already applied")
+        return email
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        if Entrepreneurs.objects.filter(phone=phone).exists():
+            raise forms.ValidationError("You have already applied")
+        return phone
 
     def clean_acc_val(self):
         amount = self.cleaned_data['amount']
         if amount is None:
-            raise forms.ValidationError("This is a one time payment, charged to you accout. \n You wont be able to re-edit your form, so make sure you used your correct information")
-        return acval
+            raise forms.ValidationError("This is a mandatory one time fee")
+        return amount
