@@ -1,7 +1,13 @@
+import os
+import magic
+from django.core.exceptions import ValidationError
+
 def validate_file_extension(value):
-    import os
-    from django.core.exceptions import ValidationError
-    ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
-    valid_extensions = ['.pdf', '.doc', '.docx', '.jpg', '.png', '.xlsx', '.xls']
-    if not ext.lower() in valid_extensions:
-        raise ValidationError('Unsupported file extension.')
+    valid_mime_types = ['application/pdf', 'image/jpeg']
+    file_mime_type = magic.from_buffer(value.read(1024), mime=True)
+    if file_mime_type not in valid_mime_types:
+        raise ValidationError('Unsupported file type.')
+    valid_file_extensions = ['.pdf', '.jpg']
+    ext = os.path.splitext(value.name)[1]
+    if ext.lower() not in valid_file_extensions:
+        raise ValidationError('Unacceptable file extension.')
