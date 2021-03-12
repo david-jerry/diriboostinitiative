@@ -44,25 +44,6 @@ class BioForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs["class"] = "sm-form-control border-form-control"
-        self.helper = FormHelper()
-        self.helper.layout = Layout(
-            Row(
-                Column("first_name", css_class="col-md-12 mb-4"),
-                Column("mid_name", css_class="col-md-12 mb-4"),
-                Column("last_name", css_class="col-md-12 mb-4"),
-                Column("state", css_class="col-md-6 mb-4"),
-                Column("lga", css_class="col-md-6 mb-4"),
-                Column("bank_name", css_class="col-md-12 mb-4"),
-                Column("bvn", css_class="col-md-6 mb-4"),
-                Column("acc_no", css_class="col-md-6 mb-4"),
-                css_class="row form-section mb-4",
-            ),
-            Submit(
-                "submit",
-                "Submit ",
-                css_class="button button-border button-circle font-weight-medium ml-0 topmargin-sm",
-            ),
-        )
 
     def clean_bvn(self):
         bvn = self.cleaned_data['bvn']
@@ -87,18 +68,6 @@ class StatementForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs["class"] = "sm-form-control border-form-control"
-        self.helper = FormHelper()
-        self.helper.layout = Layout(
-            Row(
-                Column("st_o_acc", css_class="col-md-12 mb-4"),
-                css_class="row form-section mb-4",
-            ),
-            Submit(
-                "submit",
-                "Submit ",
-                css_class="button button-border button-circle font-weight-medium ml-0 topmargin-sm",
-            ),
-        )
 
     def clean_st_o_acc(self):
         sto = self.cleaned_data['st_o_acc']
@@ -123,20 +92,6 @@ class ValidateForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs["class"] = "disabled sm-form-control border-form-control"
             
-        self.helper = FormHelper()
-        self.helper.layout = Layout(
-            Row(
-                Column("email", css_class="col-md-6 mb-4"),
-                Column("phone", css_class="col-md-6 mb-4"),
-                Column("amount", css_class="col-md-12 mb-4"),
-                css_class="row form-section mb-4",
-            ),
-            # Submit(
-            #     "submit",
-            #     "Submit ",
-            #     css_class="button button-border button-circle font-weight-medium ml-0 topmargin-sm",
-            # ),
-        )
 
     def clean_email(self):
         email = self.cleaned_data['email']
