@@ -71,10 +71,13 @@ class User(AbstractUser):
 
 class Entrepreneurs(TimeStampedModel):
     STATUS = Choices("pending", "approved", "rejected")
+    # amount = DecimalField(_("Cost"), default=1000.00, null=True)
     # entre = OneToOneField(User, on_delete=SET_NULL, null=True, blank=True)
     first_name = CharField(_("First Name"), max_length=255, null=True, blank=False)
     mid_name = CharField(_("Middle Name"), max_length=255, null=True, blank=False)
     last_name = CharField(_("Last Name"), max_length=255, null=True, blank=False)
+    email = EmailField(_("Email"), unique=True, null=True, blank=False)
+    phone = CharField(_("Phone Number"), max_length=12, null=True, blank=False)
     state = CharField(_("State of Origin"), max_length=255, null=True, blank=False, default="Bayelsa")
     lga = CharField(_("Local Government Area (LGA)"), max_length=255, null=True, blank=False,)
     bvn = CharField(_("Bank Verification Number (BVN)"), max_length=255, null=True, blank=False,)
@@ -85,10 +88,11 @@ class Entrepreneurs(TimeStampedModel):
     status = StatusField(default="pending")
 
     def __str__(self):
-        return "{first} {last}".format(self.first_name, self.last_name)
+        return f"{self.first_name} {self.mid_name}[0:1] {self.last_name}"
 
     class Meta:
         managed = True
         verbose_name = 'Entrepreneur'
         verbose_name_plural = 'Entrepreneurs'
         ordering = ['-created']
+

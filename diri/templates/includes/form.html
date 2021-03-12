@@ -6,21 +6,23 @@
 <form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
 <table>
 {{ wizard.management_form }}
-{% if wizard.form.forms in crispy_form %}
+{% if wizard.form.forms %}
     {{ wizard.form.management_form }}
     {% for form in wizard.form.forms %}
-        {% crispy form %}
+        {% crispy form.as_p %}
     {% endfor %}
 {% else %}
     {{ wizard.form }}
 {% endif %}
 </table>
+
+{% if wizard.steps.next %}
+<button class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">{% trans "NEXT" %}</button>
+{% endif %}
+{% if wizard.steps.last %}
+<input onclick="payWithPaystackOrg()" class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit" value="{% trans "SUBMIT" %}"/>
+{% endif %}
 {% if wizard.steps.prev %}
-<button class="button button-border button-circle font-weight-medium ml-0 topmargin-sm" name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}">{% trans "first step" %}</button>
-<button class="button button-border button-circle font-weight-medium ml-0 topmargin-sm" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "prev step" %}</button>
-{% elif wizard.steps.next %}
-<input class="button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit" value="{% trans "next" %}"/>
-{% else %}
-<input class="button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit" value="{% trans "submit" %}"/>
+<button class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "PREVIOUS" %}</button>
 {%endif %}
 </form>
