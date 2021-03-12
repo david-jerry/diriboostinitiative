@@ -68,10 +68,10 @@
 {% block inline_javascript %}
 <script>
   $('input#pay').click(function payWithPaystackOrg(e) {
-    e.preventDefault();
     var email = $("#id_2-email").val();
     var phone = $("#id_2-phone").val();
 
+    e.preventDefault();
     var handler = PaystackPop.setup({
       key: 'pk_live_16432e86d97009113cb2aa7fd4ee59df8d570202',
       email: email,
@@ -89,7 +89,6 @@
       },
       callback: function (response) {
         alert('successfully registered with transaction ref: ' + response.reference);
-        $('form').unbind('submit').submit();
       },
       onClose: function () {
         alert('window closed');

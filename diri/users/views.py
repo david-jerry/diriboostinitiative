@@ -67,14 +67,14 @@ class ApplyNow(SessionWizardView):
         initial = self.initial_dict.get(step, {})
         return initial
 
-    def get_form_instance(self, step):
-        if "entrepreneurs_id" in self.kwargs and step == 0:
-            entrepreneurs_id = self.kwargs['entrepreneurs_id']
-            return Entrepreneurs.objects.get(pk=entrepreneurs_id)
-        elif "entrepreneurs_id" in self.kwargs and step == 1:
-            entrepreneurs_id = self.kwargs['entrepreneurs_id']
-            return Entrepreneurs.objects.get(pk=entrepreneurs_id)
-        return self.instance_dict.get(step, None)
+    # def get_form_instance(self, step):
+    #     if "entrepreneurs_id" in self.kwargs and step == 0:
+    #         entrepreneurs_id = self.kwargs['entrepreneurs_id']
+    #         return Entrepreneurs.objects.get(pk=entrepreneurs_id)
+    #     elif "entrepreneurs_id" in self.kwargs and step == 1:
+    #         entrepreneurs_id = self.kwargs['entrepreneurs_id']
+    #         return Entrepreneurs.objects.get(pk=entrepreneurs_id)
+    #     return self.instance_dict.get(step, None)
 
     def get(self, request, *args, **kwargs):
         try:
