@@ -71,6 +71,31 @@ class User(AbstractUser):
 
 class Entrepreneurs(TimeStampedModel):
     STATUS = Choices("pending", "approved", "rejected")
+    BANKS = (
+       ('', _('SELECT BANK')),
+       ('ACCESS BANK PLC', _('ACCESS BANK PLC')),
+       ('CITIBANK NIG. PLC', _('CITIBANK NIG. PLC')),
+       ('ECOBANK NIG. PLC', _('ECOBANK NIG. PLC')),
+       ('FIDELITY BANK PLC', _('FIDELITY BANK PLC')),
+       ('FIRST BANK NIG. LTD', _('FIRST BANK NIG. LTD')),
+       ('FIRST CITY MONUMENT BANK PLC', _('FIRST CITY MONUMENT BANK PLC')),
+       ('GLOBUS BANK LTD', _('GLOBUS BANK LTD')),
+       ('GUARANTY TRUST BANK PLC', _('GUARANTY TRUST BANK PLC')),
+       ('HERITAGE BANKING COMPANY LTD', _('HERITAGE BANKING COMPANY LTD')),
+       ('KEYSTONE BANK', _('KEYSTONE BANK')),
+       ('POLARIS BANK', _('POLARIS BANK')),
+       ('PROVIDUS BANK', _('PROVIDUS BANK')),
+       ('STANBIC IBTC BANK LTD', _('STANBIC IBTC BANK LTD')),
+       ('STANDARD CHARTERED BANK NIG. LTD', _('STANDARD CHARTERED BANK NIG. LTD')),
+       ('STERLING BANK PLC', _('STERLING BANK PLC')),
+       ('SUNTRUST BANK NIG. PLC', _('SUNTRUST BANK NIG. PLC')),
+       ('TITAN TRUST BANK LTD', _('TITAN TRUST BANK LTD')),
+       ('UNION BANK OF NIG. PLC', _('UNION BANK OF NIG. PLC')),
+       ('UNITED BANK FOR AFRICA PLC', _('UNITED BANK FOR AFRICA PLC')),
+       ('UNITY BANK PLC', _('UNITY BANK PLC')),
+       ('WEMA BANK PLC', _('WEMA BANK PLC')),
+       ('ZENITH BANK PLC', _('ZENITH BANK PLC')),
+   )
     amount = CharField(_("Statement Validation Fee"), default="1000.00", max_length=7, null=True, blank=True, help_text="This is a compulsory one time payment from all applicants, charged for their bank statement verification.")
     first_name = CharField(_("First Name"), max_length=255, null=True, blank=False)
     mid_name = CharField(_("Middle Name"), max_length=255, null=True, blank=False)
@@ -80,7 +105,7 @@ class Entrepreneurs(TimeStampedModel):
     state = CharField(_("State of Origin"), max_length=255, null=True, blank=False, default="Bayelsa")
     lga = CharField(_("Local Government Area (LGA)"), max_length=255, null=True, blank=False,)
     bvn = CharField(_("Bank Verification Number (BVN)"), max_length=255, null=True, blank=False,)
-    bank_name = CharField(_("Bank Name"), max_length=255, null=True, blank=False,)
+    bank_name = CharField(_("Bank Name"), max_length=255, choices=BANKS, null=True, blank=False,)
     acc_no = CharField(_("Account Number (NUBAN)"), max_length=255, null=True, blank=False,)
     st_o_acc = FileField(_("Statement of Account"), upload_to=bank_file_path, null=True, blank=True, help_text="upload your account statement for verification")
     status = StatusField(default="pending")

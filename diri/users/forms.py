@@ -43,7 +43,7 @@ class BioForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs["class"] = "sm-form-control border-form-control"
+            field.widget.attrs["class"] = "sm-form-control b mb-4"
 
     def clean_bvn(self):
         bvn = self.cleaned_data['bvn']
@@ -67,7 +67,7 @@ class StatementForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs["class"] = "sm-form-control border-form-control"
+            field.widget.attrs["class"] = "sm-form-control b mb-4"
 
     def clean_st_o_acc(self):
         sto = self.cleaned_data['st_o_acc']
@@ -90,7 +90,7 @@ class ValidateForm(forms.ModelForm):
         self.fields['amount'].widget.attrs["readonly"] = True
         self.fields['amount'].widget.attrs["disabled"] = True
         for field in self.fields.values():
-            field.widget.attrs["class"] = "disabled sm-form-control border-form-control"
+            field.widget.attrs["class"] = "disabled sm-form-control b mb-4"
             
 
     def clean_email(self):
