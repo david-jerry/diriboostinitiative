@@ -26,17 +26,3 @@
 </main>
 {% endblock content %}
 
-{% block inline_javascript %}
-<script>
-  jQuery(document).ready(function () {
-
-    jQuery('.price-block input:radio').on('change', function () {
-      $('.checked').removeClass('checked');
-      if ($(this).is(':checked')) {
-        $(this).parents('label').addClass('checked');
-      }
-    });
-
-  });
-</script>
-{% endblock inline_javascript %}

@@ -11,6 +11,7 @@ from formtools.wizard.views import SessionWizardView
 from django.contrib import messages
 from django.shortcuts import render
 from django.core.files.storage import DefaultStorage
+from django.http import HttpResponseRedirect
 
 User = get_user_model()
 
@@ -52,28 +53,56 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 user_redirect_view = UserRedirectView.as_view()
 
 
-class ApplyNow(SessionWizardView, LoginRequiredMixin, SuccessMessageMixin):
+class ApplyNow(SessionWizardView, SuccessMessageMixin):
     model = Entrepreneurs
     template_name = "pages/home.html"
     form_list = [BioForm, StatementForm, ValidateForm]
     file_storage = DefaultStorage()
-    success_url = reverse_lazy("home")
-    success_message = _("Your application has been submitted successfully")
-    def get(self, request, *args, **kwargs):
-        try:
-            return self.render(self.get_form())
-        except KeyError:
-            return super().get(request, *args, **kwargs)
 
-    def done(self, form_list, *args, **kwargs):
-        request = self.request
-        return render(
-            request,
-            "pages/home.html",
-            {
-                "form_data": [form.cleaned_data for form in form_list],
-            },
-        )
+    def get_form_initial(self, step):
+        if 'id' in self.kwargs:
+            return {}
+        return self.initial_dict.get(step, {})
+
+    # def get_template_names(self):
+    #     return[TEMPLATES[self.steps.current]]
+
+    def get_form_instance(self, step):
+        if not self.instance_dict:
+            if 'id' in self.kwargs:
+                id = self.kwargs['id']
+                self.instance_dict = Entrepreneurs.objects.get(id=id)
+            else:
+                self.instance_dict = Entrepreneurs()
+        return self.instance_dict
+
+    def done(self, form_list, form_dict, **kwargs):
+        # user = self.instance_dict
+        # user.is_active = False
+        # user.is_individual = True
+        # user.save()
+        for form in form_list:
+            form_data = form.cleaned_data
+            form.save()
+        messages.success(self.request, 'Your application has been submitted successfully')
+        return HttpResponseRedirect('/')
+
+
+    # def get(self, request, *args, **kwargs):
+    #     try:
+    #         return self.render(self.get_form())
+    #     except KeyError:
+    #         return super().get(request, *args, **kwargs)
+
+    # def done(self, form_list, *args, **kwargs):
+    #     request = self.request
+    #     return render(
+    #         request,
+    #         "pages/home.html",
+    #         {
+    #             "form_data": [form.cleaned_data for form in form_list],
+    #         },
+    #     )
 
 
 apply_now = ApplyNow.as_view()

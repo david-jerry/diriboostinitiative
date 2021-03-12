@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "6f38beb1cb2a7a8629f83a4512062a824acdd7847b68d2bec8d8dcdcd76f4833"
+            "sha256": "fad77edce1240f82c8dd64d6d99f27408500c34b8531728813d7a52aa2c871bf"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -594,17 +594,6 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==3.1.0"
-        },
-        "paperboy": {
-            "hashes": [
-                "sha256:68c65250c51ac2f659034e8f91cd26afa9242014c3455e577668f60e49cd2d34"
-            ],
-            "version": "==1.0.1"
-        },
-        "paystack": {
-            "editable": true,
-            "git": "https://github.com/gbozee/django-paystack.git",
-            "ref": "24df1c9ca209031e0ec940ff8552d45ca6b55421"
         },
         "phonenumbers": {
             "hashes": [
