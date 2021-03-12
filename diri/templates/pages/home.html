@@ -21,6 +21,13 @@
             <form id="sub-form" action="{% url 'home' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
               <script src="https://js.paystack.co/v1/inline.js"></script>
               <div class="row">
+                {% if wizard.form.non_field_errors %}
+                <div role="alert" class="alert alert-danger">
+                  {% for error in wizard.form.non_field_errors %}
+                  {{error}}
+                  {% endfor %}
+                </div>
+                {% endif %}
                 {{ wizard.management_form }}
                 {% if wizard.form.forms %}
                 {{ wizard.form.management_form }}

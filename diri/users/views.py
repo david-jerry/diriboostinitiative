@@ -56,41 +56,39 @@ user_redirect_view = UserRedirectView.as_view()
 
 
 class ApplyNow(SessionWizardView):
-    model = Entrepreneurs
+    # model = Entrepreneurs
     template_name = "pages/home.html"
     form_list = [BioForm, StatementForm, ValidateForm]
-    file_storage = FileSystemStorage(location=os.path.join(settings.base.MEDIA_URL, 'tmp'))
+    file_storage = DefaultStorage()
 
+    def get_form_initial(self, step):
+        if "entrepreneurs_id" in self.kwargs:
+            return {}
+        initial = self.initial_dict.get(step, {})
+        return initial
 
-    # def get_form_initial(self, step):
-    #     if 'id' in self.kwargs:
-    #         return {}
-    #     initial = self.initial_dict.get(step, {})
-    #     return initial
+    def get_form_instance(self, step):
+        if "entrepreneurs_id" in self.kwargs and step == 0:
+            entrepreneurs_id = self.kwargs['entrepreneurs_id']
+            return Entrepreneurs.objects.get(pk=entrepreneurs_id)
+        elif "entrepreneurs_id" in self.kwargs and step == 1:
+            entrepreneurs_id = self.kwargs['entrepreneurs_id']
+            return Entrepreneurs.objects.get(pk=entrepreneurs_id)
+        return self.instance_dict.get(step, None)
 
-    # def get_form_instance(self, step):
-    #     pk = self.kwargs.get('pk')
-    #     if not self.instance_dict:
-    #         if 'pk' in self.kwargs:
-    #             entr_id = pk
-    #             self.instance_dict = Entrepreneurs.objects.get(pk=entr_id)
-    #         else:
-    #             self.instance_dict = Entrepreneurs()
-    #         # return self.instance_dict.get(step, None)
-    #     return self.instance_dict
-
-    def get(self, request, *args, **kwargs):
-        try:
-            return self.render(self.get_form())
-        except KeyError:
-            return super().get(request, *args, **kwargs)
+    # def get(self, request, *args, **kwargs):
+    #     try:
+    #         return self.render(self.get_form())
+    #     except KeyError:
+    #         return super().get(request, *args, **kwargs)
 
     def done(self, form_list, form_dict, *args, **kwargs):
-        request = self.request
         for form in form_list:
             form_data = form.cleaned_data
-            form_data.save()
-        messages.success(self.request, 'Your application has been submitted successfully')
-        return redirect(reverse_lazy('home'))
+        messages.success(
+            self.request, "Your application has been submitted successfully"
+        )
+        return HttpResponseRedirect('/')
 
-apply_now = ApplyNow.as_view([BioForm, StatementForm, ValidateForm])
+
+apply_now = ApplyNow.as_view()
