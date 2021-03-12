@@ -76,15 +76,16 @@ class ApplyNow(SessionWizardView):
             return Entrepreneurs.objects.get(pk=entrepreneurs_id)
         return self.instance_dict.get(step, None)
 
-    # def get(self, request, *args, **kwargs):
-    #     try:
-    #         return self.render(self.get_form())
-    #     except KeyError:
-    #         return super().get(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        try:
+            return self.render(self.get_form())
+        except KeyError:
+            return super().get(request, *args, **kwargs)
 
     def done(self, form_list, form_dict, *args, **kwargs):
         for form in form_list:
             form_data = form.cleaned_data
+            form_data.save()
         messages.success(
             self.request, "Your application has been submitted successfully"
         )

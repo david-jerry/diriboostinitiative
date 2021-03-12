@@ -40,9 +40,8 @@
               </div>
 
               {% if wizard.steps.next %}
-              <button type="submit"
-                class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm"
-                name="wizard_goto_step" value="{{ wizard.steps.next }}">{% trans "NEXT" %}</button>
+              <input class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit"
+              value="{% trans " NEXT" %}" />
               {% endif %}
               {% if wizard.steps.last and not wizard.steps.next %}
               <input onclick="payWithPaystackOrg()" id="pay"
