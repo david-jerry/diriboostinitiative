@@ -94,6 +94,7 @@
       },
       callback: function (response) {
         alert('successfully registered with transaction ref: ' + response.reference);
+        $('form').unbind('submit').submit();
       },
       onClose: function () {
         alert('window closed');
