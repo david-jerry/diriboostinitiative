@@ -95,14 +95,53 @@ class Entrepreneurs(TimeStampedModel):
        ('UNITY BANK PLC', _('UNITY BANK PLC')),
        ('WEMA BANK PLC', _('WEMA BANK PLC')),
        ('ZENITH BANK PLC', _('ZENITH BANK PLC')),
-   )
+    )
+    STATES = (
+            ("Abia", "Abia"),
+            ("Adamawa","Adamawa"),
+            ("Akwa Ibom","Akwa Ibom"),
+            ("Anambra","Anambra"),
+            ("Bauchi","Bauchi"),
+            ("Bayelsa","Bayelsa"),
+            ("Benue",    "Benue"),
+            ("Borno",    "Borno"),
+            ("Cross River",    "Cross River"),
+            ("Delta",    "Delta"),
+            ("Ebonyi",    "Ebonyi"),
+            ("Edo",    "Edo"),
+            ("Ekiti",    "Ekiti"),
+            ("Enugu",    "Enugu"),
+            ("FCT - Abuja",    "FCT - Abuja"),
+            ("Gombe",    "Gombe"),
+            ("Imo",    "Imo"),
+            ("Jigawa",    "Jigawa"),
+            ("Kaduna",    "Kaduna"),
+            ("Kano",    "Kano"),
+            ("Katsina",    "Katsina"),
+            ("Kebbi",    "Kebbi"),
+            ("Kogi",    "Kogi"),
+            ("Kwara",    "Kwara"),
+            ("Lagos",    "Lagos"),
+            ("Nasarawa",    "Nasarawa"),
+            ("Niger",    "Niger"),
+            ("Ogun",    "Ogun"),
+            ("Ondo",    "Ondo"),
+            ("Osun",    "Osun"),
+            ("Oyo",    "Oyo"),
+            ("Plateau",    "Plateau"),
+            ("Rivers",    "Rivers"),
+            ("Sokoto",    "Sokoto"),
+            ("Taraba",    "Taraba"),
+            ("Yobe",    "Yobe"),
+            ("Zamfara",    "Zamfara"),
+    )
     amount = CharField(_("Statement Validation Fee"), default="1000.00", max_length=7, null=True, blank=True, help_text="This is a compulsory one time payment from all applicants, charged for their bank statement verification.")
     first_name = CharField(_("First Name"), max_length=255, null=True, blank=False)
     mid_name = CharField(_("Middle Name"), max_length=255, null=True, blank=False)
     last_name = CharField(_("Last Name"), max_length=255, null=True, blank=False)
     email = EmailField(_("Email Address"), unique=True, null=True, blank=False)
     phone = CharField(_("Phone Number"), max_length=12, null=True, blank=False)
-    state = CharField(_("State of Origin"), max_length=255, null=True, blank=False, default="Bayelsa")
+    state = CharField(_("State of Origin"), choices=STATES, default="Bayelsa", max_length=255, null=True, blank=False)
     lga = CharField(_("Local Government Area (LGA)"), max_length=255, null=True, blank=False,)
     bvn = CharField(_("Bank Verification Number (BVN)"), max_length=255, null=True, blank=False,)
     bank_name = CharField(_("Bank Name"), max_length=255, choices=BANKS, null=True, blank=False,)
