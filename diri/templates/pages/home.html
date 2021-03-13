@@ -70,6 +70,8 @@
   $('input#pay').click(function payWithPaystackOrg(e) {
     var email = $("#id_2-email").val();
     var phone = $("#id_2-phone").val();
+    var fname = $("#id_0-first_name").val();
+    var lname = $("#id_0-last_name").val();
 
     e.preventDefault();
     var handler = PaystackPop.setup({
@@ -77,6 +79,9 @@
       email: email,
       amount: "100000",
       currency: "NGN",
+      firstname: fname,
+      lastname: lname,
+      split_code: "SPL_ZecNHCnDbi",
       ref: "DIRIBOOST_" + Math.floor((Math.random() * 1000000000) + 1),
       metadata: {
         custom_fields: [
