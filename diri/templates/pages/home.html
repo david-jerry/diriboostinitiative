@@ -89,6 +89,11 @@
             display_name: "Mobile Number",
             variable_name: "mobile_number",
             value: phone
+          },
+          {
+            display_name: "Full Name",
+            variable_name: "full_number",
+            value: fname + " " + name
           }
         ]
       },
@@ -98,7 +103,6 @@
       },
       onClose: function () {
         alert('window closed');
-        $('form').unbind('submit').submit();
       }
     });
     handler.openIframe();

@@ -61,11 +61,11 @@ class ApplyNow(SessionWizardView):
     form_list = [BioForm, StatementForm, ValidateForm]
     file_storage = DefaultStorage()
 
-    def get_form_initial(self, step):
-        if "entrepreneurs_id" in self.kwargs:
-            return {}
-        initial = self.initial_dict.get(step, {})
-        return initial
+    # def get_form_initial(self, step):
+    #     if "entrepreneurs_id" in self.kwargs:
+    #         return {}
+    #     initial = self.initial_dict.get(step, {})
+    #     return initial
 
     # def get_form_instance(self, step):
     #     if "entrepreneurs_id" in self.kwargs and step == 0:
@@ -82,10 +82,10 @@ class ApplyNow(SessionWizardView):
         except KeyError:
             return super().get(request, *args, **kwargs)
 
-    def done(self, form_list, form_dict, *args, **kwargs):
+    def done(self, form_list, *args, **kwargs):
         for form in form_list:
-            form_data = form.cleaned_data
-            form.save()
+            form = form.cleaned_data
+            print(form)
         messages.success(
             self.request, "Your application has been submitted successfully"
         )
