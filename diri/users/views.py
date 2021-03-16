@@ -14,6 +14,7 @@ from django.core.files.storage import DefaultStorage, FileSystemStorage
 from django.http import HttpResponseRedirect
 import os
 from config import settings
+from django.core.mail import send_mail
 
 User = get_user_model()
 
@@ -54,7 +55,11 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 user_redirect_view = UserRedirectView.as_view()
 
-
+FORMS = [
+    ("bio", BioForm),
+    ("statement", StatementForm),
+    ("validate", ValidateForm)
+]
 class ApplyNow(SessionWizardView):
     # model = Entrepreneurs
     template_name = "pages/home.html"
@@ -76,19 +81,23 @@ class ApplyNow(SessionWizardView):
     #         return Entrepreneurs.objects.get(pk=entrepreneurs_id)
     #     return self.instance_dict.get(step, None)
 
-    def get(self, request, *args, **kwargs):
-        try:
-            return self.render(self.get_form())
-        except KeyError:
-            return super().get(request, *args, **kwargs)
+    # def get(self, request, *args, **kwargs):
+    #     try:
+    #         return self.render(self.get_form())
+    #     except KeyError:
+    #         return super().get(request, *args, **kwargs)
 
     def done(self, form_list, *args, **kwargs):
-        form_data = [form.cleaned_data for form in form_list]
-        print(form_data)
+        for form in form_list:
+            form_data = form.cleaned_data
+            entrepreneurs = Entrepreneurs.objects.create(**form_data)
+            print(entrepreneurs)
+            msg = """Name: {name}\nState: {state}\nLGA: {lga}\nBank: {bank}\nAccount: {acc_no}\nBVN: {bvn}\nEmail: {email}\nPhone: {phone}""".format(name=entrepreneurs.__str__, state=entrepreneurs.state, lga=entrepreneurs.lga, bank=entrepreneurs.bank_name, acc_no=entrepreneurs.acc_no, bvn=entrepreneurs.bvn, email=entrepreneurs.email, phone=entrepreneurs.phone)
+            send_mail("NEW ENTREPRENEUR REGISTERED", msg, "noreply@diriboostinitiative.com.ng", ["admin@diriboostinitiative.com.ng", "admin@edavids.me"], fail_silently=False)
         messages.success(
             self.request, "Your application has been submitted successfully"
         )
         return HttpResponseRedirect('/')
 
 
-apply_now = ApplyNow.as_view()
+apply_now = ApplyNow.as_view(FORMS)

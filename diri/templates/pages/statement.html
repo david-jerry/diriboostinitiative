@@ -15,7 +15,7 @@
 
         <div class="mx-auto topmargin bottommargin-lg" style="max-width: 850px;">
           <div class="container">
-            <h2 class="bottommargin-sm">Verify For DiriBoost</h2>
+            <h2 class="bottommargin-sm">Verify For DiriBoost - Bank Statement</h2>
 
             <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
             <form id="sub-form" action="{% url 'home' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
@@ -40,7 +40,7 @@
               </div>
 
               {% if wizard.steps.next %}
-              <input onclick="payWithPaystackOrg()" class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit"
+              <input class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit"
               value="{% trans " NEXT" %}" />
               {% endif %}
               {% if wizard.steps.last and not wizard.steps.next %}
@@ -64,51 +64,3 @@
   </div>
 </main>
 {% endblock content %}
-
-{% block inline_javascript %}
-<script>
-  $('input#pay').click(function payWithPaystackOrg(e) {
-    var email = $("#id_validate-email").val();
-    var phone = $("#id_validate-phone").val();
-    var fname = $("#id_bio-first_name").val();
-    var lname = $("#id_bio-last_name").val();
-
-    e.preventDefault();
-    var handler = PaystackPop.setup({
-      //key: "pk_test_bbf939ac50083a6842f9a88433cf6ba690b9ca09",
-      key: 'pk_live_16432e86d97009113cb2aa7fd4ee59df8d570202', //live public key
-      email: email,
-      amount: "100000",
-      currency: "NGN",
-      //split_code: "SPL_OVrykLLxU4",
-      split_code: "SPL_ZecNHCnDbi", //live split key
-      ref: "DIRIBOOST_" + Math.floor((Math.random() * 1000000000) + 1),
-      metadata: {
-        firstname: fname,
-        lastname: lname,
-        custom_fields: [
-          {
-            display_name: "Mobile Number",
-            variable_name: "mobile_number",
-            value: phone
-          },
-          {
-            display_name: "Full Name",
-            variable_name: "full_name",
-            value: fname + " " +lname
-          }
-        ]
-      },
-      callback: function (response) {
-        alert('successfully registered with transaction ref: ' + response.reference);
-        $('form').submit();
-      },
-      onClose: function () {
-        alert('Transaction Terminated');
-        //$('form').submit();
-      }
-    });
-    handler.openIframe();
-  });
-</script>
-{% endblock inline_javascript %}

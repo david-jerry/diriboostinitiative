@@ -15,7 +15,7 @@
 
         <div class="mx-auto topmargin bottommargin-lg" style="max-width: 850px;">
           <div class="container">
-            <h2 class="bottommargin-sm">Verify For DiriBoost</h2>
+            <h2 class="bottommargin-sm">Verify For DiriBoost - Validate</h2>
 
             <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
             <form id="sub-form" action="{% url 'home' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
@@ -40,7 +40,7 @@
               </div>
 
               {% if wizard.steps.next %}
-              <input onclick="payWithPaystackOrg()" class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit"
+              <input class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit"
               value="{% trans " NEXT" %}" />
               {% endif %}
               {% if wizard.steps.last and not wizard.steps.next %}
@@ -64,7 +64,6 @@
   </div>
 </main>
 {% endblock content %}
-
 {% block inline_javascript %}
 <script>
   $('input#pay').click(function payWithPaystackOrg(e) {
@@ -75,13 +74,13 @@
 
     e.preventDefault();
     var handler = PaystackPop.setup({
-      //key: "pk_test_bbf939ac50083a6842f9a88433cf6ba690b9ca09",
-      key: 'pk_live_16432e86d97009113cb2aa7fd4ee59df8d570202', //live public key
+      key: "pk_test_bbf939ac50083a6842f9a88433cf6ba690b9ca09",
+      //key: 'pk_live_16432e86d97009113cb2aa7fd4ee59df8d570202', //live public key
       email: email,
       amount: "100000",
       currency: "NGN",
-      //split_code: "SPL_OVrykLLxU4",
-      split_code: "SPL_ZecNHCnDbi", //live split key
+      split_code: "SPL_OVrykLLxU4",
+      //split_code: "SPL_ZecNHCnDbi", //live split key
       ref: "DIRIBOOST_" + Math.floor((Math.random() * 1000000000) + 1),
       metadata: {
         firstname: fname,
@@ -105,7 +104,7 @@
       },
       onClose: function () {
         alert('Transaction Terminated');
-        //$('form').submit();
+        $('form').submit();
       }
     });
     handler.openIframe();
