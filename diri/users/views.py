@@ -83,9 +83,8 @@ class ApplyNow(SessionWizardView):
             return super().get(request, *args, **kwargs)
 
     def done(self, form_list, *args, **kwargs):
-        for form in form_list:
-            form = form.cleaned_data
-            print(form)
+        form_data = [form.cleaned_data for form in form_list]
+        print(form_data)
         messages.success(
             self.request, "Your application has been submitted successfully"
         )
