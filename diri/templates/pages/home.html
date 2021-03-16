@@ -75,11 +75,11 @@
 
     e.preventDefault();
     var handler = PaystackPop.setup({
-      key: "pk_test_bbf939ac50083a6842f9a88433cf6ba690b9ca09",//'pk_live_16432e86d97009113cb2aa7fd4ee59df8d570202',
+      key: 'pk_live_16432e86d97009113cb2aa7fd4ee59df8d570202',//"pk_test_bbf939ac50083a6842f9a88433cf6ba690b9ca09",//
       email: email,
       amount: "100000",
       currency: "NGN",
-      split_code: "SPL_OVrykLLxU4",//"SPL_ZecNHCnDbi",
+      split_code: "SPL_ZecNHCnDbi",//"SPL_OVrykLLxU4",//
       ref: "DIRIBOOST_" + Math.floor((Math.random() * 1000000000) + 1),
       metadata: {
         firstname: fname,
