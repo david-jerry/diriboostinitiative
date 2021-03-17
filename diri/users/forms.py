@@ -84,7 +84,7 @@ class BioForm(forms.ModelForm):
                 "phone",
                 UneditableField("amount", css_class='sm-form-control'),
                 HTML("""<input onclick="payWithPaystackOrg()" id="pay" type="submit" name="verify" class="submit action-button btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" value="Verify"/>"""),
-                HTML("""<a href="{% url 'home' %}" class="center btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm">RESET FORM</a>"""),
+                HTML("""<a href="{% url 'home' %}" class="center action-button-previous btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm">RESET FORM</a>"""),
             ),
         )
 
