@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n crispy_forms_tags %}
+{% load i18n compress crispy_forms_tags static %}
 
 {% block head %}
 {{ wizard.form.media }}
@@ -17,42 +17,9 @@
           <div class="container">
             <h2 class="bottommargin-sm">Verify For DiriBoost</h2>
 
-            <p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
-            <form id="sub-form" action="{% url 'home' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+            <form id="msform" action="{% url 'home' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
               <script src="https://js.paystack.co/v1/inline.js"></script>
-              <div class="row">
-                {% if wizard.form.non_field_errors %}
-                <div role="alert" class="alert alert-danger">
-                  {% for error in wizard.form.non_field_errors %}
-                  {{error}}
-                  {% endfor %}
-                </div>
-                {% endif %}
-                {{ wizard.management_form }}
-                {% if wizard.form.forms %}
-                {{ wizard.form.management_form }}
-                {% for form in wizard.form.forms %}
-                {% crispy form %}
-                {% endfor %}
-                {% else %}
-                {{ wizard.form }}
-                {% endif %}
-              </div>
-
-              {% if wizard.steps.next %}
-              <input onclick="payWithPaystackOrg()" class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit"
-              value="{% trans " NEXT" %}" />
-              {% endif %}
-              {% if wizard.steps.last and not wizard.steps.next %}
-              <input onclick="payWithPaystackOrg()" id="pay"
-                class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit"
-                value="{% trans " SUBMIT" %}" />
-              {% endif %}
-              {% if wizard.steps.prev %}
-              <button type="submit"
-                class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm"
-                name="wizard_goto_step" value="{{ wizard.steps.prev }}">{% trans "PREVIOUS" %}</button>
-              {%endif %}
+              {% crispy form %}
             </form>
 
           </div>
@@ -65,13 +32,262 @@
 </main>
 {% endblock content %}
 
+{% block head_css %}
+<style>
+  #msform {
+    position: relative;
+  }
+
+  #msform legend {
+    padding: 15px;
+    background-color: rgb(35, 35, 35);
+    color: #adee09;
+    border-radius: 15px;
+    font-weight: 400;
+    font-size: 22px;
+    text-align: center;
+  }
+
+  #msform fieldset {
+    background: white;
+    border: 0 none;
+    border-radius: 19px;
+    box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+    padding: 40px 30px;
+    box-sizing: border-box;
+    min-width: 100%;
+    margin: 0 10%;
+
+    /*stacking fieldsets above each other*/
+    position: relative;
+  }
+
+  /*Hide all except first fieldset*/
+  #msform fieldset:not(:first-of-type) {
+    display: none;
+  }
+
+  /*inputs*/
+#msform input, #msform textarea {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 0px;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: montserrat;
+  color: #2C3E50;
+  font-size: 13px;
+}
+
+#msform input:focus, #msform textarea:focus {
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  border: 1px solid #d64b8e;
+  outline-width: 0;
+  transition: All 0.5s ease-in;
+  -webkit-transition: All 0.5s ease-in;
+  -moz-transition: All 0.5s ease-in;
+  -o-transition: All 0.5s ease-in;
+}
+
+
+  /*buttons*/
+  #msform .action-button {
+    width: 100%;
+    background: #262526;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 25px;
+    cursor: pointer;
+    padding: 10px 5px;
+    margin: 10px 5px;
+  }
+
+  #msform .action-button:hover,
+  #msform .action-button:focus {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #262526;
+  }
+
+  #msform .action-button-previous {
+    width: 100%;
+    background: #5e5e63;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 25px;
+    cursor: pointer;
+    padding: 10px 5px;
+    margin: 10px 5px;
+  }
+
+  #msform .action-button-previous:hover,
+  #msform .action-button-previous:focus {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #5e5e63;
+  }
+
+  /*progressbar*/
+  #progressbar {
+    margin-bottom: 30px;
+    overflow: hidden;
+    /*CSS counters to number the steps*/
+    counter-reset: step;
+  }
+
+  #progressbar li {
+    list-style-type: none;
+    text-transform: uppercase;
+    font-size: 9px;
+    width: 33.33%;
+    float: left;
+    position: relative;
+    letter-spacing: 1px;
+  }
+
+  #progressbar li:before {
+    content: counter(step);
+    counter-increment: step;
+    width: 24px;
+    height: 24px;
+    line-height: 26px;
+    display: block;
+    font-size: 12px;
+    color: rgb(255, 255, 255);
+    background: rgb(80, 81, 70);
+    border-radius: 25px;
+    margin: 0 auto 10px auto;
+  }
+
+  /*progressbar connectors*/
+  #progressbar li:after {
+    content: '';
+    width: 100%;
+    height: 2px;
+    background: rgb(255, 169, 169);
+    position: absolute;
+    left: -50%;
+    top: 9px;
+    z-index: -1;
+    /*put it behind the numbers*/
+  }
+
+  #progressbar li:first-child:after {
+    /*connector not needed before the first step*/
+    content: none;
+  }
+
+  /*marking active/completed steps green*/
+  /*The number of the step and the connector before it = green*/
+  #progressbar li.active:before,
+  #progressbar li.active:after {
+    background: #adee09;
+    color: rgb(31, 30, 30);
+  }
+</style>
+{% endblock head_css %}
+
+{% block comment %}
+{% block javascript %}
+{% compress js inline %}
+<script src="{% static 'js/project.js' %}"></script>
+{% endcompress js %}
+{% endblock javascript %}
+{%endblock comment%}
+
 {% block inline_javascript %}
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js'></script>
+
 <script>
+
+  //jQuery time
+
+  //jQuery time
+  var current_fs, next_fs, previous_fs; //fieldsets
+  var left, opacity, scale; //fieldset properties which we will animate
+  var animating; //flag to prevent quick multi-click glitches
+
+  $(".next").click(function () {
+    if (animating) return false;
+    animating = true;
+
+    current_fs = $(this).parent();
+    next_fs = $(this).parent().next();
+
+    //activate next step on progressbar using the index of next_fs
+    $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+    //show the next fieldset
+    next_fs.show();
+    //hide the current fieldset with style
+    current_fs.animate({ opacity: 0 }, {
+      step: function (now, mx) {
+        //as the opacity of current_fs reduces to 0 - stored in "now"
+        //1. scale current_fs down to 80%
+        scale = 1 - (1 - now) * 0.2;
+        //2. bring next_fs from the right(50%)
+        left = (now * 50) + "%";
+        //3. increase opacity of next_fs to 1 as it moves in
+        opacity = 1 - now;
+        current_fs.css({
+          'transform': 'scale(' + scale + ')',
+          'position': 'absolute'
+        });
+        next_fs.css({ 'left': left, 'opacity': opacity });
+      },
+      duration: 800,
+      complete: function () {
+        current_fs.hide();
+        animating = false;
+      },
+      //this comes from the custom easing plugin
+      easing: 'easeInOutBack'
+    });
+  });
+
+  $(".previous").click(function () {
+    if (animating) return false;
+    animating = true;
+
+    current_fs = $(this).parent();
+    previous_fs = $(this).parent().prev();
+
+    //de-activate current step on progressbar
+    $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+    //show the previous fieldset
+    previous_fs.show();
+    //hide the current fieldset with style
+    current_fs.animate({ opacity: 0 }, {
+      step: function (now, mx) {
+        //as the opacity of current_fs reduces to 0 - stored in "now"
+        //1. scale previous_fs from 80% to 100%
+        scale = 0.8 + (1 - now) * 0.2;
+        //2. take current_fs to the right(50%) - from 0%
+        left = ((1 - now) * 50) + "%";
+        //3. increase opacity of previous_fs to 1 as it moves in
+        opacity = 1 - now;
+        current_fs.css({ 'left': left });
+        previous_fs.css({ 'transform': 'scale(' + scale + ')', 'opacity': opacity });
+      },
+      duration: 800,
+      complete: function () {
+        current_fs.hide();
+        animating = false;
+      },
+      //this comes from the custom easing plugin
+      easing: 'easeInOutBack'
+    });
+  });
+
   $('input#pay').click(function payWithPaystackOrg(e) {
-    var email = $("#id_validate-email").val();
-    var phone = $("#id_validate-phone").val();
-    var fname = $("#id_bio-first_name").val();
-    var lname = $("#id_bio-last_name").val();
+    var email = $("#id_email").val();
+    var bvn = $("#id_bvn").val();
+    var phone = $("#id_phone").val();
+    var fname = $("#id_first_name").val();
+    var lname = $("#id_last_name").val();
 
     e.preventDefault();
     var handler = PaystackPop.setup({
@@ -88,14 +304,24 @@
         lastname: lname,
         custom_fields: [
           {
+            display_name: "Full Name",
+            variable_name: "full_name",
+            value: fname + " " + lname
+          },
+          {
             display_name: "Mobile Number",
             variable_name: "mobile_number",
             value: phone
           },
           {
-            display_name: "Full Name",
-            variable_name: "full_name",
-            value: fname + " " +lname
+            display_name: "Email",
+            variable_name: "email",
+            value: email
+          },
+          {
+            display_name: "BVN",
+            variable_name: "bvn",
+            value: bvn
           }
         ]
       },
@@ -110,5 +336,43 @@
     });
     handler.openIframe();
   });
+
 </script>
 {% endblock inline_javascript %}
+
+<form id="sub-form" action="{% url 'home' %}" method="POST" enctype="multipart/form-data">{% csrf_token %}
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <div class="row">
+    {% if wizard.form.non_field_errors %}
+    <div role="alert" class="alert alert-danger">
+      {% for error in wizard.form.non_field_errors %}
+      {{error}}
+      {% endfor %}
+    </div>
+    {% endif %}
+    {{ wizard.management_form }}
+    {% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+    {% crispy form %}
+    {% endfor %}
+    {% else %}
+    {{ wizard.form }}
+    {% endif %}
+  </div>
+
+  {% if wizard.steps.next %}
+  <input onclick="payWithPaystackOrg()"
+    class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit"
+    value="{% trans " NEXT" %}" />
+  {% endif %}
+  {% if wizard.steps.last and not wizard.steps.next %}
+  <input onclick="payWithPaystackOrg()" id="pay"
+    class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit"
+    value="{% trans " SUBMIT" %}" />
+  {% endif %}
+  {% if wizard.steps.prev %}
+  <button type="submit" class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm"
+    name="wizard_goto_step" value="{{ wizard.steps.prev }}">{% trans "PREVIOUS" %}</button>
+  {%endif %}
+</form>

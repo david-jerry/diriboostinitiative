@@ -1,68 +1,30 @@
-{% load i18n crispy_forms_tags %}
+{{form.non_field_errors}}
 
-
-
-<p>Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
-<form id="sub-form" action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
-    <table>
-        {{ wizard.management_form }}
-        {% if wizard.form.forms %}
-        {{ wizard.form.management_form }}
-        {% for form in wizard.form.forms %}
-        {% crispy form.as_p %}
-        {% endfor %}
-        {% else %}
-        {{ wizard.form }}
-        {% endif %}
-    </table>
-
-    {% if wizard.steps.next %}
-    <button class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm"
-        name="wizard_goto_step" type="submit" value="{{ wizard.steps.next }}">{% trans "NEXT" %}</button>
-    {% endif %}
-    {% if wizard.steps.last and not wizard.steps.next %}
-    <input onclick="payWithPaystackOrg()"
-        class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm" type="submit"
-        value="{% trans " SUBMIT" %}" />
-    {% endif %}
-    {% if wizard.steps.prev %}
-    <button class="btn-block button button-border button-circle font-weight-medium ml-0 topmargin-sm"
-        name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "PREVIOUS" %}</button>
-    {%endif %}
+<form action="" method="post" id="msform" enctype="multipart/form-data">
+  {% csrf_token %}
+  <ul id="progressbar" class="center">
+    <li class="active">Personal Details</li>
+    <li>Bank Information</li>
+    <li>Verification Fee</li>
+  </ul>
+  <fieldset>
+    <h2 class="fs-title">
+      Diriboost Verification
+    </h2>
+    <h3 class="fs-subtitle">
+      Personal Details
+    </h3>
+    <div class="row">
+      {{form.first_name.errors}}
+      <input type="text" name="First Name" id="id_first_name" class="sm-form-control col-12 mb-4">
+      {{form.min_name.errors}}
+      <input type="text" name="Middle Name" id="id_mid_name">
+      {{form.last_name.errors}}
+      <input type="text" name="Last Name" id="id_last_name">
+      {{form.state.errors}}
+      <input type="text" name="First Name" id="id_first_name">
+      {{form.lga.errors}}
+      <input type="text" name="First Name" id="id_first_name">
+    </div>
+  </fieldset>
 </form>
-
-{% block inline_javascript %}
-<script>
-    $('#sub-form').submit(function payWithPaystackOrg(e) {
-        e.preventDefault();
-        var email = $("#id_0-email").val();
-        var phone = $("#id_0-phone").val();
-        var amount = $("#id_2-amount").val();
-
-        var handler = PaystackPop.setup({
-            key: 'pk_live_16432e86d97009113cb2aa7fd4ee59df8d570202',
-            email: email,
-            amount: amount,
-            currency: "NGN",
-            ref: "DIRIBOOST_" + Math.floor((Math.random() * 1000000000) + 1),
-            metadata: {
-                custom_fields: [
-                    {
-                        display_name: "Mobile Number",
-                        variable_name: "mobile_number",
-                        value: phone
-                    }
-                ]
-            },
-            callback: function (response) {
-                alert('successfully registered with transaction ref: ' + response.reference);
-                e.currentTarget.submit();
-            },
-            onClose: function () {
-                alert('window closed');
-            }
-        });
-        handler.openIframe();
-    })
-</script>
-{% endblock inline_javascript %}
