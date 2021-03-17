@@ -9,6 +9,7 @@ from diri.users.forms import UserChangeForm, UserCreationForm
 
 User = get_user_model()
 
+
 class ExportCsvMixin:
     def export_as_csv(self, request, queryset):
 
@@ -26,6 +27,7 @@ class ExportCsvMixin:
         return response
 
     export_as_csv.short_description = "Export Selected models as CSV format"
+
 
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
@@ -53,8 +55,6 @@ class UserAdmin(auth_admin.UserAdmin):
     search_fields = ["name"]
 
 
-
-
 @admin.register(Entrepreneurs)
 class EntrepreneursAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display = [
@@ -77,5 +77,11 @@ class EntrepreneursAdmin(admin.ModelAdmin, ExportCsvMixin):
         "last_name",
         "email",
         "phone",
+        "state",
+        "lga",
+        "bvn",
+        "bank_name",
+        "acc_no",
+        "st_o_acc",
     ]
     actions = ["export_as_csv"]
