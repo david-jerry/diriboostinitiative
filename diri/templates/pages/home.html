@@ -189,7 +189,6 @@
 {% endblock head_css %}
 
 {% block inline_javascript %}
-{% compress js inline %}
 <script>
 
   //jQuery time
@@ -279,17 +278,13 @@
     var fname = $("#id_first_name").val();
     var lname = $("#id_last_name").val();
     var full_name = fname + " " + lname;
-    alert (full_name)
 
     e.preventDefault();
     var handler = PaystackPop.setup({
-      {% if DEBUG %}
-      key: "pk_test_bbf939ac50083a6842f9a88433cf6ba690b9ca09",
-      split_code: "SPL_OVrykLLxU4",
-      {% else %}
+      //key: "pk_test_bbf939ac50083a6842f9a88433cf6ba690b9ca09",
+      //split_code: "SPL_OVrykLLxU4",
       key: 'pk_live_16432e86d97009113cb2aa7fd4ee59df8d570202', 
       split_code: "SPL_ZecNHCnDbi", //live split key
-      {% endif %}
       email: email,
       phone: phone,
       fullname: full_name,
@@ -325,5 +320,4 @@
   });
 
 </script>
-{% endcompress js %}
 {% endblock inline_javascript %}

@@ -328,9 +328,9 @@ ACCOUNT_ADAPTER = "diri.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 SOCIALACCOUNT_ADAPTER = "diri.users.adapters.SocialAccountAdapter"
 ACCOUNT_SESSION_REMEMBER = None
-ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 3
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
-ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = False
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 ACCOUNT_PRESERVE_USERNAME_CASING = False
 ACCOUNT_USERNAME_BLACKLIST = ["admin", "superuser", "user", "username", "jeloblis"]
 ACCOUNT_MAX_EMAIL_ADDRESSES = 2
@@ -524,6 +524,26 @@ HAYSTACK_CONNECTIONS = {
     "default": {
         "ENGINE": "haystack.backends.whoosh_backend.WhooshEngine",
         "PATH": str(APPS_DIR / "whppsh_index"),
-    }
+        'STORAGE': 'ram',
+        'POST_LIMIT': 128 * 1024 * 1024,
+        'INCLUDE_SPELLING': True,
+        'BATCH_SIZE': 100,
+    },
+    'autocomplete': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': str(APPS_DIR / "whppsh_index"),
+        'STORAGE': 'ram',
+        'POST_LIMIT': 128 * 1024 * 1024,
+        'INCLUDE_SPELLING': True,
+        'BATCH_SIZE': 100,
+    },
+    'slave': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': str(APPS_DIR / "whppsh_index"),
+        'STORAGE': 'ram',
+        'INCLUDE_SPELLING': True,
+        'BATCH_SIZE': 100,
+        # 'EXCLUDED_INDEXES': ['thirdpartyapp.search_indexes.BarIndex'],
+    },
 }
 HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"

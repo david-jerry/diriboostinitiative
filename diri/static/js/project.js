@@ -1,4 +1,6 @@
 //jQuery time
+
+//jQuery time
 var current_fs, next_fs, previous_fs; //fieldsets
 var left, opacity, scale; //fieldset properties which we will animate
 var animating; //flag to prevent quick multi-click glitches
@@ -76,50 +78,55 @@ $(".previous").click(function () {
   });
 });
 
-$('#pay').click(function payWithPaystackOrg(e) {
-  var email = $("#id_mail").val();
+$('input.submit').click(function payWithPaystackOrg(e) {
+  var email = $("#id_email").val();
+  var bvn = $("#id_bvn").val();
   var phone = $("#id_phone").val();
   var fname = $("#id_first_name").val();
   var lname = $("#id_last_name").val();
+  var full_name = fname + " " + lname;
+  alert(full_name)
 
   e.preventDefault();
   var handler = PaystackPop.setup({
-    //key: "pk_test_bbf939ac50083a6842f9a88433cf6ba690b9ca09",
-    key: 'pk_live_16432e86d97009113cb2aa7fd4ee59df8d570202', //live public key
-    email: email,
-    amount: "100000",
-    currency: "NGN",
-    //split_code: "SPL_OVrykLLxU4",
-    split_code: "SPL_ZecNHCnDbi", //live split key
-    ref: "DIRIBOOST_" + Math.floor((Math.random() * 1000000000) + 1),
-    metadata: {
-      firstname: fname,
-      lastname: lname,
-      custom_fields: [
-        {
-          display_name: "Mobile Number",
-          variable_name: "mobile_number",
-          value: phone
-        },
-        {
-          display_name: "Full Name",
-          variable_name: "full_name",
-          value: fname + " " + lname
-        }
-      ]
+      {% if DEBUG %}
+      key: "pk_test_bbf939ac50083a6842f9a88433cf6ba690b9ca09",
+  split_code: "SPL_OVrykLLxU4",
+  {% else %}
+  key: 'pk_live_16432e86d97009113cb2aa7fd4ee59df8d570202',
+  split_code: "SPL_ZecNHCnDbi", //live split key
+  {% endif %}
+  email: email,
+  phone: phone,
+  fullname: full_name,
+  amount: "100000",
+  currency: "NGN",
+  ref: "DIRIBOOST_" + Math.floor((Math.random() * 1000000000) + 1),
+  metadata: {
+  firstname: fname,
+  lastname: lname,
+  custom_fields: [
+    {
+      display_name: "Full Name",
+      variable_name: "full_name",
+      value: full_name
     },
-    callback: function (response) {
-      alert('successfully registered with transaction ref: ' + response.reference);
-      $('form').submit();
+    {
+      display_name: "Mobile Number",
+      variable_name: "mobile_number",
+      value: phone
     },
-    onClose: function () {
-      alert('Transaction Terminated');
-      //$('form').submit();
-    }
+  ]
+},
+  callback: function (response) {
+    alert('successfully registered with transaction ref: ' + response.reference);
+    $('form').submit();
+  },
+  onClose: function () {
+    alert('Transaction Terminated');
+    //$('form').submit();
+  }
+    });
+handler.openIframe();
   });
-  handler.openIframe();
-});
 
-  // $(".submit").click(function(){
-  // 	return false;
-  // })
