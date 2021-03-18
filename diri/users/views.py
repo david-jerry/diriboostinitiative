@@ -84,10 +84,6 @@ class ApplyNow(SuccessMessageMixin, CreateView):
         )
         return super(ApplyNow, self).form_valid(form)
 
-    def form_invalid(self, form):
-        return HttpResponse("Invalid Validation")
-
-
 apply_now = ApplyNow.as_view()
 
 # FORMS = [
