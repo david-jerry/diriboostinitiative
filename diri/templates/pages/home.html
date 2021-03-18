@@ -188,14 +188,6 @@
 </style>
 {% endblock head_css %}
 
-{% block comment %}
-{% block javascript %}
-{% compress js inline %}
-<script src="{% static 'js/project.js' %}"></script>
-{% endcompress js %}
-{% endblock javascript %}
-{%endblock comment%}
-
 {% block inline_javascript %}
 {% compress js inline %}
 <script>
