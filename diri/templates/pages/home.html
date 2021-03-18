@@ -272,7 +272,7 @@
     });
   });
 
-  $('.submit').click(function payWithPaystackOrg(e) {
+  $('input.submit').click(function payWithPaystackOrg(e) {
     var email = $("#id_email").val();
     var bvn = $("#id_bvn").val();
     var phone = $("#id_phone").val();
@@ -303,16 +303,6 @@
             variable_name: "mobile_number",
             value: phone
           },
-          {
-            display_name: "Email",
-            variable_name: "email",
-            value: email
-          },
-          {
-            display_name: "BVN",
-            variable_name: "bvn",
-            value: bvn
-          }
         ]
       },
       callback: function (response) {
