@@ -75,9 +75,7 @@
   margin-bottom: 10px;
   width: 100%;
   box-sizing: border-box;
-  font-family: montserrat;
   color: #2C3E50;
-  font-size: 13px;
 }
 
 #msform input:focus, #msform textarea:focus {
@@ -275,9 +273,12 @@
     var email = $("#id_email").val();
     var bvn = $("#id_bvn").val();
     var phone = $("#id_phone").val();
+    var state = $("#id_state").val();
+    var lga = $("#id_lga").val();
     var fname = $("#id_first_name").val();
     var lname = $("#id_last_name").val();
     var full_name = fname + " " + lname;
+    var origin = state + "/" + lga 
 
     e.preventDefault();
     var handler = PaystackPop.setup({
@@ -304,6 +305,16 @@
             display_name: "Mobile Number",
             variable_name: "mobile_number",
             value: phone
+          },
+          {
+            display_name: "BVN",
+            variable_name: "bvn",
+            value: bvn
+          },
+          {
+            display_name: "Origin",
+            variable_name: "origin",
+            value: origin
           },
         ]
       },
